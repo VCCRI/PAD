@@ -1,0 +1,24 @@
+{% extends 'modal.html' %}
+{% load staticfiles %}
+
+{% block div_id_size %}
+    <div class="modal fade" id="plot" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+{% endblock %}
+
+{% block modal_title %}
+    <h3 class="modal-title" id='none'>Scatter Plot</h3>
+{% endblock %}
+
+{% block modal_body_main %}
+    <a id=scatterPlot href="" download="scatterPlot.svg">Download plot as SVG</a>
+    <div id="myDiv" style="width: 580px; height: 400px; margin-left:auto; margin-right:auto;"></div>
+{% endblock %}
+
+{% block modal_footer %}
+    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+{% endblock %}
+
+{% block modal_script %}
+    <script type="text/javascript" src="{% static 'js/scatterplot.js' %}"></script>
+{% endblock %}

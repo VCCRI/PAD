@@ -1,0 +1,26 @@
+<!-- Modal peak_db_selection.html -->
+{% block div_id_size %}{% endblock %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {% block modal_title %}{% endblock %}
+            </div>
+            <div class="modal-body">
+                <div data-role="page" id="pageone">
+                    <div data-role="header"></div>
+                    <div data-role="main" class="ui-content">
+                    {% block modal_body_main %}{% endblock %}
+                    </div>
+                    <div data-role="footer">
+                    </div>
+                </div> 
+            </div>
+            <div class="modal-footer">
+                {% block modal_footer %}{% endblock %}
+            </div>  
+        </div>
+    </div>
+</div> <!-- closes the div_id -->
+
+{% block modal_script %}{% endblock %}
+

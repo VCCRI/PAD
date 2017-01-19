@@ -1,0 +1,37 @@
+{% extends 'modal.html' %}
+{% load staticfiles %}
+
+{% block div_id_size %}
+    <div class="modal fade" id="plot-select" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-md" role="document">
+{% endblock %}
+
+{% block modal_title %}
+    <h3 class="modal-title" id="myModalLabel">Peak Selection</h3>
+{% endblock %}
+
+{% block modal_body_main %}
+    <table id="plot-table" class="table table-hover">
+        <thead>
+            <tr class="active" id="table-head">
+                <th class="col-md-1 text-center">File name</th>
+            </tr>
+        </thead>
+        <tbody id=table-body>
+            {% for peak in peakfile_names %}
+            <tr class="rows" id={{peak}}>
+                <td class="col-md-1 text-center" data-toggle="modal" data-id={{peak}} data-target="#plot">{{peak}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block modal_footer %}
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <!-- <button type="button" class="btn btn-primary" onclick="selectedRows()">Plot</button> -->
+{% endblock %}
+
+{% block modal_script %}
+    <script type="text/javascript" src="{% static 'js/plot_select.js' %}"></script>
+{% endblock %}

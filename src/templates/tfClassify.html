@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block panel %}
+
+{% if proximal_dendrogram and distal_dendrogram %}
+    <script src="{% static 'js/plotly-latest.min.js' %}"></script>
+{% endif %}
+
+<div class="row">
+    {% include 'sidebar.html' with heatmap='{{proximal_dendrogram}}'%}
+    <div class="col-xs-9" id=heatmap>
+        {% if not distal_dendrogram and not proximal_dendrogram %}
+            {% include 'instruction.html' %}
+        {% endif %}
+
+        {% if proximal_dendrogram and distal_dendrogram %}
+            <h2 class="page-header heatmap-title">Correlation of TSS Proximal sites</h2>
+            <a id=proximalSvg href="" download="proximal.svg">Download proximal plot as SVG</a>
+            <div id="proximal" class="plotly-container"></div>
+            <script type="text/javascript">var json_data = {{json_data|safe}};</script>
+            <script type="text/javascript" src="{% static 'js/proximal.js' %}"></script>
+            <p>White tile indicates non-significant value.</p>
+            <h2 class="page-header heatmap-title">Correlation of TSS Distal sites</h2>
+            <a id=distalSvg href="" download="distal.svg">Download distal plot as SVG</a>
+            <div id="distal" class="plotly-container"></div>
+            <script type="text/javascript">var json_data = {{json_data|safe}};</script>
+            <script type="text/javascript" src="{% static 'js/distal.js' %}"></script>
+            <p>White tile indicates non-significant value.</p>
+        {% endif %}
+    </div>
+    {% include 'peak_db_selection.html' %}
+    {% include 'plot_peak_selection.html' %}
+    {% include 'plot.html' %}
+</div>
+{% endblock %}

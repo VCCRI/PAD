@@ -1,0 +1,21 @@
+{% load staticfiles %}
+
+<div class="col-xs-3">
+    <div class="sidebar-nav">
+        <div class="navbar navbar-default" role="navigation">
+            <div class='navbar-collapse collapse sidebar-navebar-collapse'>
+                {% include 'peak_form.html' %}
+            </div>
+        </div>
+    </div>
+    {% if proximal_dendrogram %}
+        <div class="sidebar-nav">
+            <div class="navbar navbar-default" role="navigation">
+                <div class='navbar-collapse collapse sidebar-navebar-collapse'>
+                    {% include 'plot_form.html' %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+

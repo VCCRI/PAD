@@ -1,0 +1,38 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PAD clustering</title>
+
+    {% include 'head_css.html' %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'js/dataTables.tableTools.js' %}"></script>
+</head>
+    <body>
+    <!-- navbar -->
+        {% include 'navbar.html' %}
+        <div class="container">
+            {% block panel %}
+            {% endblock %}
+        </div> <!-- /container -->
+        <div id="overlay" style="display: none;"><div class="spinner" style="display: none;"></div></div>
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        
+        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
+        <script src="{% static 'js/pad.js' %}"></script>
+    </body>
+</html>
