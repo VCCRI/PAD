@@ -57,7 +57,7 @@ class InputForm(forms.Form):
     )
     heatmap = forms.ChoiceField(choices=PLOT_CHOICES, required=True, label='Heatmaps clustering', help_text='Option to cluster the proximal and distal heatmaps independently or based on one of the heatmap')
 
-    pvalue = forms.FloatField(label="P-Value cut off", max_value=0.1)
+    pvalue = forms.FloatField(label="P-Value cut off", max_value=1, min_value=0)
 
     #validating input
     def clean(self):
@@ -104,7 +104,7 @@ class VariableInputForm(forms.Form):
     )
     heatmap = forms.ChoiceField(choices=PLOT_CHOICES, required=True, label='Heatmaps clustering', help_text='Option to cluster the proximal and distal heatmaps independently or based on one of the heatmap')
 
-    pvalue = forms.FloatField(label="P-Value cut off", max_value=0.1, min_value=0)
+    pvalue = forms.FloatField(label="P-Value cut off", max_value=1, min_value=0)
     # # validating input
     # def clean(self):
     #     cleaned_data = super(VariableInputForm, self).clean()

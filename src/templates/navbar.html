@@ -10,6 +10,15 @@
       </button>
       <a class="navbar-brand" href="/">PAD clustering</a>
     </div>
-      <div id="navbar" class="navbar-collapse collapse"></div>
+
+    <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          {% if page and page == "instruction" %}
+          <li class="active"><a href="/instruction">Instruction</a></li>
+          {% else %}
+          <li><a href="/instruction">Instruction</a></li>
+          {% endif %}
+        </ul>
+    </div>
   </div>
 </nav>

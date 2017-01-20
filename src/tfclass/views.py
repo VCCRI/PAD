@@ -120,6 +120,7 @@ def tfClassifyResult(request):
             peakfile_names.append(name.name)
 
         request.session['cut_off'] = cutoff
+        request.session['pvalue'] = pvalue
 
         peak_name_strings = cleaned_data.get('selected_peaks')
         peak_database_names = peak_name_strings.rstrip().split()
@@ -167,7 +168,6 @@ def tfClassifyResult(request):
     start_time = time.time()
     # FOR PROXIMAL
     proximal_fc_limit = [float("inf"), float("-inf")]
-    proximal_nonsig_fc_min = float("-inf")
     for i in range(matrix_size):
         file_one_user_uploaded = True
         if fname[i] not in user_uploaded_filename:
@@ -199,7 +199,7 @@ def tfClassifyResult(request):
                 f2 = os.path.join(user_path, full_filename_j)
             if i == j:
                 proximal_matrix[i][j] = calculateJaccardFC(1, "proximal")
-                proximal_pval_matrix[i][j] = True
+                proximal_pval_matrix[i][j] = 0
                 proximal_dist_matrix[i][j] = 0
                 break
             elif file_one_user_uploaded:
@@ -220,8 +220,8 @@ def tfClassifyResult(request):
                 proximal_matrix[i][j] = 0
                 proximal_matrix[j][i] = 0
 
-                proximal_pval_matrix[i][j] = False
-                proximal_pval_matrix[j][i] = False
+                proximal_pval_matrix[i][j] = 1
+                proximal_pval_matrix[j][i] = 1
 
                 proximal_dist_matrix[i][j] = 1
                 proximal_dist_matrix[j][i] = 1
@@ -231,13 +231,8 @@ def tfClassifyResult(request):
                 proximal_matrix[j][i] = jaccard_fc
 
                 jaccard_pval = calculateJaccardPval(jaccard_index, "proximal")
-                if jaccard_pval < pvalue:
-                    jaccard_significant = True
-                else:
-                    jaccard_significant = False
-
-                proximal_pval_matrix[i][j] = jaccard_significant
-                proximal_pval_matrix[j][i] = jaccard_significant
+                proximal_pval_matrix[i][j] = jaccard_pval
+                proximal_pval_matrix[j][i] = jaccard_pval
 
                 proximal_dist_matrix[i][j] = 1-jaccard_index
                 proximal_dist_matrix[j][i] = 1-jaccard_index
@@ -249,7 +244,6 @@ def tfClassifyResult(request):
 
     # FOR DISTAL
     distal_fc_limit = [float("inf"), float("-inf")]
-    distal_nonsig_fc_min = float('-inf')
     for i in range(matrix_size):
         file_one_user_uploaded = True
         if fname[i] not in user_uploaded_filename:
@@ -282,7 +276,7 @@ def tfClassifyResult(request):
                 f2 = os.path.join(user_path, full_filename_j)
             if i == j:
                 distal_matrix[i][j] = calculateJaccardFC(1, "distal")
-                distal_pval_matrix[i][j] = True
+                distal_pval_matrix[i][j] = 0
                 distal_dist_matrix[i][j] = 0
                 break
             elif file_one_user_uploaded:
@@ -303,8 +297,8 @@ def tfClassifyResult(request):
                 distal_matrix[i][j] = 0
                 distal_matrix[j][i] = 0
 
-                distal_pval_matrix[i][j] = False
-                distal_pval_matrix[j][i] = False
+                distal_pval_matrix[i][j] = 1
+                distal_pval_matrix[j][i] = 1
 
                 distal_dist_matrix[i][j] = 1
                 distal_dist_matrix[j][i] = 1
@@ -314,13 +308,8 @@ def tfClassifyResult(request):
                 distal_matrix[j][i] = jaccard_fc
 
                 jaccard_pval = calculateJaccardPval(jaccard_index, "distal")
-                if jaccard_pval < pvalue:
-                    jaccard_significant = True
-                else:
-                    jaccard_significant = False
-
-                distal_pval_matrix[i][j] = jaccard_significant
-                distal_pval_matrix[j][i] = jaccard_significant
+                distal_pval_matrix[i][j] = jaccard_pval
+                distal_pval_matrix[j][i] = jaccard_pval
 
                 distal_dist_matrix[i][j] = 1-jaccard_index
                 distal_dist_matrix[j][i] = 1-jaccard_index
@@ -347,6 +336,7 @@ def tfClassifyResult(request):
         f_order = proximal_dendrogram['ivl']
         # reorder the matrix by new order of the dendogram
         ordered_proximal_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
+        ordered_proximal_pval_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
         # find the index of ordered item in the original matrix
         # use the index found and get the value from the original matrix and get the value and insert to new matrix
         for i, f_name1 in enumerate(f_order):
@@ -354,22 +344,27 @@ def tfClassifyResult(request):
             for j, f_name2 in enumerate(f_order):
                 index2 = fname.index(f_name2)
 
-                if proximal_pval_matrix[index1][index2]:
+                if proximal_pval_matrix[index1][index2] <= pvalue:
                     ordered_proximal_matrix[i][j] = proximal_matrix[index1][index2]
                 else:
-                    ordered_proximal_matrix[i][j] = proximal_nonsig_fc_min
+                    ordered_proximal_matrix[i][j] = float("-inf")
+
+                ordered_proximal_pval_matrix[i][j] = 'p-value: {:1.5f}'.format(proximal_pval_matrix[index1][index2])
 
         f_order = distal_dendrogram['ivl']
         ordered_distal_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
+        ordered_distal_pval_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
         for i, f_name1 in enumerate(f_order):
             index1 = fname.index(f_name1)
             for j, f_name2 in enumerate(f_order):
                 index2 = fname.index(f_name2)
 
-                if distal_pval_matrix[index1][index2]:
+                if distal_pval_matrix[index1][index2] <= pvalue:
                     ordered_distal_matrix[i][j] = distal_matrix[index1][index2]
                 else:
-                    ordered_distal_matrix[i][j] = distal_nonsig_fc_min
+                    ordered_distal_matrix[i][j] = float("-inf")
+
+                ordered_distal_pval_matrix[i][j] = 'p-value: {:1.5f}'.format(distal_pval_matrix[index1][index2])
 
         p_name = proximal_dendrogram['ivl']
         p_new_ls = p_name
@@ -398,21 +393,26 @@ def tfClassifyResult(request):
             p_new_ls = d_name
             d_new_ls = d_name
         ordered_proximal_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
+        ordered_proximal_pval_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
         ordered_distal_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
+        ordered_distal_pval_matrix = [[0 for x in range(matrix_size)] for x in range(matrix_size)]
         for i, f_name1 in enumerate(f_order):
             index1 = fname.index(f_name1)
             for j, f_name2 in enumerate(f_order):
                 index2 = fname.index(f_name2)
 
-                if proximal_pval_matrix[index1][index2]:
+                if proximal_pval_matrix[index1][index2] <= pvalue:
                     ordered_proximal_matrix[i][j] = proximal_matrix[index1][index2]
                 else:
-                    ordered_proximal_matrix[i][j] = proximal_fc_limit[0]
+                    ordered_proximal_matrix[i][j] = float("-inf")
 
-                if distal_pval_matrix[index1][index2]:
+                if distal_pval_matrix[index1][index2] <= pvalue:
                     ordered_distal_matrix[i][j] = distal_matrix[index1][index2]
                 else:
-                    ordered_distal_matrix[i][j] = distal_fc_limit[0]
+                    ordered_distal_matrix[i][j] = float("-inf")
+
+                ordered_proximal_pval_matrix[i][j] = 'p-value: {:1.5f}'.format(proximal_pval_matrix[index1][index2])
+                ordered_distal_pval_matrix[i][j] = 'p-value: {:1.5f}'.format(distal_pval_matrix[index1][index2])
 
     proc_time = time.time()-start_time
 
@@ -422,8 +422,10 @@ def tfClassifyResult(request):
             'd_filename': d_new_ls,
             'matrix_size': matrix_size,
             'proximal_matrix': ordered_proximal_matrix,
+            'proximal_pval_matrix': ordered_proximal_pval_matrix,
             'proximal_dendrogram': proximal_dendrogram,
             'distal_matrix': ordered_distal_matrix,
+            'distal_pval_matrix': ordered_distal_pval_matrix,
             'distal_dendrogram': distal_dendrogram,
             'proxdist_fc_limit': [proximal_fc_limit, distal_fc_limit],
             'proc_time': proc_time
@@ -440,3 +442,7 @@ def tfClassifyResult(request):
     }
 
     return render(request, 'tfClassify.html', context)
+
+# === tfClassifyGuide ===
+def tfClassifyGuide(request):
+    return render(request, 'tfGuide.html', context={'page':'instruction'})

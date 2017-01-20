@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block panel %}
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1 class="page-header">Instruction to using Proximal and Distal (PAD) clustering</h1>
+        <h2>Introduction</h2>
+        <p>Proximal and Distal (PAD) clustering is a web resource to identify and characterize co-localization sites of
+            transcription factor (TF) at regions proximal and distal regions to gene promoters. It builds on top of our
+            finding that proximal and distal binding sites of TFs can facilitate drastically different functions in
+            transcriptional and epigenomic regulations (Oldfield and Yang et al. Mol. Cell 2014). PAD extends such
+            multiple facet TF binding analysis to a large set of TFs profiled by ChIP-Seq technique in embryonic stem
+            cells (ESCs) and leads to the discovery of previously unappreciated function of many more TFs in gene
+            regulation.</p>
+
+        <h2>Step-by-step guide</h2>
+        <img src="/static/images/form_explanation.png" class="img-responsive">
+        <p>Follow these steps to perform analysis:</p>
+        <ol>
+            <li>
+                Selecting the peak files from TFs of interests by clicking the white button. The text field “Selected
+                peaks” shows the peak files that have been selected. A default set of TFs peak files are selected for
+                demonstration purpose.
+            </li>
+            <li>
+                Selecting the gene annotation files to map the selected peaks for clustering and visualization. Current
+                files are mapped based on RefSeq gene annotation of mm9 assembly. More mapping will be made available in
+                future to facilitate the analysis of ChIP-Seq peak calls of TFs from other cell types and/or organism.
+            </li>
+            <li>
+                (optional) Upload a user specified peak file for clustering comparison against the TFs selected from the
+                database. This step allows the user to supply and compare their own TF of interest with respect to TFs
+                curated in the PAD database.
+            </li>
+            <li>
+                Selecting a cut-off value for separating proximal and distal sites. This cut-off value will be used to
+                threshold how close a peak to a TSS annotated in refSeq gene database will be called proximal, and thus
+                separating the binding sites called for each TF into proximal and distal sites. The default value is
+                1000 bp.
+            </li>
+            <li>
+                Whether to link the order of the TF clustering heatmaps for proximal and distal sites. If “independent”
+                (the default) is selected, the order of TFs heatmaps for proximal and distal sites will not be linked.
+                Otherwise, the heatmaps will be either linked by the order of proximal sites or distal sites.
+            </li>
+            <li>
+                (optional) Selecting a p-value cut-off to threshold the heatmaps. If specified, the heatmap cells that
+                does not pass the p-value cut-off will be displayed in white color.
+            </li>
+        </ol>
+        <p>Once the above fields are specified, click submit to run PAD for clustering and visualization.</p>
+
+        <h2>Interpreting the result</h2>
+        <img src="/static/images/heatmap_explanation.png" class="img-responsive">
+        <p>
+            The heatmap visualises the jaccard values between selected (and user-uploaded) peak files from TFs of
+            interest. The dendogram on the top and side of the heatmap shows the clustering of the peak from TFs based
+            on the jaccard values.
+        </p>
+    </div>
+</div>
+{% endblock %}

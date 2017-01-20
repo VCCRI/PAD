@@ -24,6 +24,7 @@ import tfclass.views
 
 urlpatterns = [
     url(r'^$', tfclass.views.tfClassifyForm),
+    url(r'^instruction/$', tfclass.views.tfClassifyGuide),
     url(r'^result/$', tfclass.views.tfClassifyResult),
     url(r'^admin/', admin.site.urls),
 ]

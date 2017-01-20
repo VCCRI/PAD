@@ -46,9 +46,10 @@ var trace00 = [
         x: m,
         y: m,
         type: 'heatmap',
+        text: json_data['distal_pval_matrix'],
         zmin: distal_fc_limit[0],
         zmax: distal_fc_limit[-1],
-
+        hoverinfo: 'x+y+z+text',
     }
 ];
 var data = trace.concat(trace00);

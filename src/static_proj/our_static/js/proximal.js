@@ -47,9 +47,11 @@ var trace00 = [
         z: json_data['proximal_matrix'],
         x: m,
         y: m,
+        text: json_data['proximal_pval_matrix'],
         type: 'heatmap',
         zmin: proximal_fc_limit[0],
         zmax: proximal_fc_limit[-1],
+        hoverinfo: 'x+y+z+text',
     }
 ];
 
