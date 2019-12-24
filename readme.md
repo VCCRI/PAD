@@ -4,9 +4,12 @@ Authors: Pengyi Yang, Andrew Oldfield, Taiyun Kim\*, Andrian Yang\*, Jean Yee Hw
 
 \* Developer of website
 
-Contact: j.ho@victorchang.edu.au
+Contact: Dr Pengyi Yang (pengyi [DOT] yang [AT] sydney.edu.au)  
 
 Copyright © 2017, Victor Chang Cardiac Research Institute
+
+
+Website: http://pad2.maths.usyd.edu.au/PADv1/ 
 
 ## Synopsis
 PAD clustering is a web resource to identify co-localization sites of binding sites at regions proximal and distal regions to gene promoters.
